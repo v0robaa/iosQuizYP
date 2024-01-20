@@ -114,7 +114,7 @@ final class MovieQuizViewController: UIViewController {
           imageView.layer.borderColor = isCorrect ?
           UIColor(named: "YP Green")?.cgColor :
           UIColor(named: "YP Red")?.cgColor
-          buttonDisable()
+        changeButtonState(isEnabled: false)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
            self.showNextQuestionOrResults()
@@ -132,7 +132,7 @@ final class MovieQuizViewController: UIViewController {
         } else {
             currentQuestionIndex += 1
             show(quiz: convert(model: questions[currentQuestionIndex]))
-            buttonEnable()
+            changeButtonState(isEnabled: true)
         }
     }
     
@@ -146,7 +146,7 @@ final class MovieQuizViewController: UIViewController {
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             self.show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
-            self.buttonEnable()
+            self.changeButtonState(isEnabled: true)
         }
         
         alert.addAction(action)
@@ -160,13 +160,8 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderColor = UIColor(named: "YP Black")?.cgColor
     }
     
-    private func buttonEnable(){
-        noButton.isEnabled = true
-        yesButton.isEnabled = true
-    }
-    
-    private func buttonDisable(){
-        noButton.isEnabled = false
-        yesButton.isEnabled = false
+    private func changeButtonState(isEnabled: Bool){
+        noButton.isEnabled = isEnabled
+        yesButton.isEnabled = isEnabled
     }
 }
