@@ -1,18 +1,18 @@
 import UIKit
 
-struct QuizQuestion {
+private struct QuizQuestion {
   let image: String
   let text: String
   let correctAnswer: Bool
 }
 
-struct QuizStepViewModel {
+private struct  QuizStepViewModel {
   let image: UIImage
   let question: String
   let questionNumber: String
 }
 
-struct QuizResultsViewModel {
+private struct QuizResultsViewModel {
   let title: String
   let text: String
   let buttonText: String
@@ -66,10 +66,11 @@ final class MovieQuizViewController: UIViewController {
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     
+    @IBOutlet var yesButton: UIButton!
+    @IBOutlet var noButton: UIButton!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
-    
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
         let currentQuestion = questions[currentQuestionIndex]
@@ -86,8 +87,9 @@ final class MovieQuizViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        show(quiz: convert(model: questions[currentQuestionIndex]))
         super.viewDidLoad()
+        setupUI()
+        show(quiz: convert(model: questions[currentQuestionIndex]))
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -109,13 +111,10 @@ final class MovieQuizViewController: UIViewController {
         if isCorrect {
             correctAnswers += 1
         }
-        
-        imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 8
-        imageView.layer.cornerRadius = 20
-        imageView.layer.borderColor = isCorrect ?
-        UIColor(named: "YP Green")?.cgColor :
-        UIColor(named: "YP Red")?.cgColor
+          imageView.layer.borderColor = isCorrect ?
+          UIColor(named: "YP Green")?.cgColor :
+          UIColor(named: "YP Red")?.cgColor
+          buttonDisable()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
            self.showNextQuestionOrResults()
@@ -133,6 +132,7 @@ final class MovieQuizViewController: UIViewController {
         } else {
             currentQuestionIndex += 1
             show(quiz: convert(model: questions[currentQuestionIndex]))
+            buttonEnable()
         }
     }
     
@@ -146,10 +146,27 @@ final class MovieQuizViewController: UIViewController {
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             self.show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
+            self.buttonEnable()
         }
         
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
     }
     
+    private func setupUI(){
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.cornerRadius = 20
+        imageView.layer.borderColor = UIColor(named: "YP Black")?.cgColor
+    }
+    
+    private func buttonEnable(){
+        noButton.isEnabled = true
+        yesButton.isEnabled = true
+    }
+    
+    private func buttonDisable(){
+        noButton.isEnabled = false
+        yesButton.isEnabled = false
+    }
 }
